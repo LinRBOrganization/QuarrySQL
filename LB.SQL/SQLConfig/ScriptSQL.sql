@@ -151,9 +151,10 @@ CREATE TABLE [dbo].[SysViewType](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 end
-
+go
 --添加默认管理员权限
 insert into dbo.DBUser ( LoginName, UserPassword, ForbidLogin, IsManager, ChangeBy, ChangeTime, UserType, UserName, UserSex)
+values('admin','sIJN5MJNrKo=',0,0,'admin',getdate(),2,'admin',0)
 
 
 

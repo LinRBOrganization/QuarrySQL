@@ -66,5 +66,6 @@
     <None Include="SQLConfig\SysViewType.sql" />
     <None Include="SQLConfig\ScriptSQL.sql" />
     <None Include="View\dbo.Db_v_UserPermission.sql" />
+    <None Include="SQLConfig\SysConstConfigSQL.sql" />
   </ItemGroup>
 </Project>
