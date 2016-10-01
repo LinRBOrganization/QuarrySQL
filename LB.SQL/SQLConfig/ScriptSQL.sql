@@ -152,9 +152,71 @@ CREATE TABLE [dbo].[SysViewType](
 ) ON [PRIMARY]
 end
 go
+IF not EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DbReportType]') AND type in (N'U'))
+begin
+	CREATE TABLE [dbo].[DbReportType](
+		[ReportTypeID] [bigint] IDENTITY(1,1) NOT NULL,
+		[ReportTypeName] [varchar](100) NOT NULL,
+	 CONSTRAINT [PK_DbReportType] PRIMARY KEY CLUSTERED 
+	(
+		[ReportTypeID] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+end
+
+go
+
+IF not EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DbReportTemplate]') AND type in (N'U'))
+begin
+	CREATE TABLE [dbo].[DbReportTemplate](
+	[ReportTemplateID] [bigint] IDENTITY(1,1) NOT NULL,
+	[ReportTemplateName] [varchar](100) NOT NULL,
+	[TemplateFileTime] [smalldatetime] NOT NULL,
+	[TemplateSeq] [int] NOT NULL,
+	[Description] [varchar](100) NOT NULL,
+	[ReportTemplateNameExt] [varchar](100) NOT NULL,
+	[TemplateData] [image] NOT NULL,
+	[ReportTypeID] [bigint] NOT NULL,
+	 CONSTRAINT [PK_DbReportTemplate] PRIMARY KEY CLUSTERED 
+	(
+		[ReportTemplateID] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+	) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+	ALTER TABLE [dbo].[DbReportTemplate]  WITH CHECK ADD  CONSTRAINT [FK_DbReportTemplate_DbReportType] FOREIGN KEY([ReportTypeID])
+	REFERENCES [dbo].[DbReportType] ([ReportTypeID])
+
+	ALTER TABLE [dbo].[DbReportTemplate] CHECK CONSTRAINT [FK_DbReportTemplate_DbReportType]
+end
+
+go
+
+
 --添加默认管理员权限
-insert into dbo.DBUser ( LoginName, UserPassword, ForbidLogin, IsManager, ChangeBy, ChangeTime, UserType, UserName, UserSex)
-values('admin','sIJN5MJNrKo=',0,0,'admin',getdate(),2,'admin',0)
+
+if not exists(
+select 1
+from dbo.DBUser 
+where LoginName='admin'
+)
+begin
+	insert into dbo.DBUser ( LoginName, UserPassword, ForbidLogin, IsManager, ChangeBy, ChangeTime, UserType, UserName, UserSex)
+	values('admin','sIJN5MJNrKo=',0,0,'admin',getdate(),2,'admin',0)
+end
+
+--添加报表模板配置
+set IDENTITY_INSERT DbReportType on 
+if not exists(
+select 1
+from dbo.DbReportType 
+where ReportTypeID=1
+)
+begin
+	insert dbo.DbReportType (ReportTypeID,ReportTypeName)
+	values(1,'用户管理')
+end
+
+set IDENTITY_INSERT DbReportType off 
 
 
 
