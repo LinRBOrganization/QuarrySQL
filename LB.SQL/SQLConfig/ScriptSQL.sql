@@ -47,6 +47,44 @@ begin
 end
 
 go
+
+
+if not exists( select 1 from dbo.syscolumns c inner join dbo.sysobjects o on c.id = o.id 
+	where o.id = object_id( 'dbo.DbPermissionData' ) and c.name = 'PermissionType' )		
+begin
+	alter table dbo.DbPermissionData
+		add PermissionType tinyint	not null
+end
+
+go
+
+
+if not exists( select 1 from dbo.syscolumns c inner join dbo.sysobjects o on c.id = o.id 
+	where o.id = object_id( 'dbo.DbPermissionData' ) and c.name = 'PermissionSPType' )		
+begin
+	alter table dbo.DbPermissionData
+		add PermissionSPType int	null
+end
+
+go
+
+if not exists( select 1 from dbo.syscolumns c inner join dbo.sysobjects o on c.id = o.id 
+	where o.id = object_id( 'dbo.DbPermissionData' ) and c.name = 'PermissionViewType' )		
+begin
+	alter table dbo.DbPermissionData
+		add PermissionViewType int	null
+end
+
+go
+
+if not exists( select 1 from dbo.syscolumns c inner join dbo.sysobjects o on c.id = o.id 
+	where o.id = object_id( 'dbo.DbPermissionData' ) and c.name = 'LogFieldName' )		
+begin
+	alter table dbo.DbPermissionData
+		add LogFieldName varchar(50)	null
+end
+go
+
 IF not EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DbSystemConst]') AND type in (N'U'))
 begin
 CREATE TABLE [dbo].[DbSystemConst](
@@ -188,8 +226,45 @@ begin
 
 	ALTER TABLE [dbo].[DbReportTemplate] CHECK CONSTRAINT [FK_DbReportTemplate_DbReportType]
 end
+go
+IF not  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DbPrinterConfig]') AND type in (N'U'))
+begin
+	CREATE TABLE [dbo].[DbPrinterConfig](
+		[PrinterConfigID] [bigint] IDENTITY(1,1) NOT NULL,
+		[ReportTemplateID] [bigint] NOT NULL,
+		[PrinterName] [varchar](100) NULL,
+		[MachineName] [varchar](100) NOT NULL,
+		[IsManualPaperType] [tinyint] NOT NULL,
+		[PaperType] [varchar](100) NULL,
+		[IsManualPaperSize] [tinyint] NOT NULL,
+		[PaperSizeHeight] [int] NULL,
+		[PaperSizeWidth] [int] NULL,
+		[IsPaperTransverse] [tinyint] NOT NULL,
+	 CONSTRAINT [PK_BDPrinterConfig] PRIMARY KEY CLUSTERED 
+	(
+		[PrinterConfigID] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+end
 
 go
+IF not  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SbSysLog]') AND type in (N'U'))
+begin
+	CREATE TABLE [dbo].[SbSysLog](
+		[SysLogID] [bigint] IDENTITY(1,1) NOT NULL,
+		[LoginName] [varchar](100) NOT NULL,
+		[LogTime] [smalldatetime] NOT NULL,
+		[LogMachineName] [varchar](100) NOT NULL,
+		[LogMachineIP] [varchar](100) NOT NULL,
+		[LogModule] [varchar](100) NOT NULL,
+		[LogStatusName] [varchar](100) NOT NULL,
+		[LogDescription] [varchar](100) NOT NULL,
+	 CONSTRAINT [PK_SBSysLog] PRIMARY KEY CLUSTERED 
+	(
+		[SysLogID] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+end
 
 
 --添加默认管理员权限

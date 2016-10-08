@@ -24,7 +24,15 @@ begin
 	insert dbo.SysViewType( SysViewType, SysViewName) values('104','DbPermissionData') 
 end
 go
+
+delete dbo.SysViewType where SysViewType='105'
 if not exists(select 1 from SysViewType where SysViewType='105')
 begin
-	insert dbo.SysViewType( SysViewType, SysViewName) values('105','DbReportTemplate') 
+	insert dbo.SysViewType( SysViewType, SysViewName) values('105','Db_v_ReportTemplate') 
+end
+go
+
+if not exists(select 1 from SysViewType where SysViewType='106')
+begin
+	insert dbo.SysViewType( SysViewType, SysViewName) values('106','SbSysLog') 
 end

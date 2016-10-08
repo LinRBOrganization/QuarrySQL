@@ -68,4 +68,7 @@
     <None Include="View\dbo.Db_v_UserPermission.sql" />
     <None Include="SQLConfig\SysConstConfigSQL.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="View\dbo.Db_v_ReportTemplate.sql" />
+  </ItemGroup>
 </Project>
